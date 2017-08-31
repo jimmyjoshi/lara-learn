@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Backend\Category;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Yajra\Datatables\Facades\Datatables;
+use App\Library\MailSender\MailSender;
 use App\Repositories\Category\EloquentCategoryRepository;
+use Illuminate\Http\Request;
+use Yajra\Datatables\Facades\Datatables;
 
 /**
  * Class AdminCategoriesController
@@ -14,35 +15,35 @@ class AdminCategoriesController extends Controller
 {
 	/**
 	 * Category Repository
-	 * 
+	 *
 	 * @var object
 	 */
 	public $repository;
 
     /**
      * Create Success Message
-     * 
+     *
      * @var string
      */
     protected $createSuccessMessage = "Category Created Successfully!";
 
     /**
      * Edit Success Message
-     * 
+     *
      * @var string
      */
     protected $editSuccessMessage = "Category Edited Successfully!";
 
     /**
      * Delete Success Message
-     * 
+     *
      * @var string
      */
     protected $deleteSuccessMessage = "Category Deleted Successfully";
 
 	/**
 	 * __construct
-	 * 
+	 *
 	 * @param EloquentCategoryRepository $repository
 	 */
 	public function __construct(EloquentCategoryRepository $repository)
@@ -51,12 +52,16 @@ class AdminCategoriesController extends Controller
     }
 
     /**
-     * Category Listing 
-     * 
+     * Category Listing
+     *
      * @return \Illuminate\View\View
      */
     public function index()
     {
+        /*$sender = new MailSender(10);
+        $status = $sender->sendAllEmails();
+        dd($status);
+        die('test');*/
         return view($this->repository->setAdmin(true)->getModuleView('listView'))->with([
             'repository' => $this->repository
         ]);
@@ -64,7 +69,7 @@ class AdminCategoriesController extends Controller
 
     /**
      * Category View
-     * 
+     *
      * @return \Illuminate\View\View
      */
     public function create(Request $request)
@@ -76,7 +81,7 @@ class AdminCategoriesController extends Controller
 
     /**
      * Category View
-     * 
+     *
      * @return \Illuminate\View\View
      */
     public function store(Request $request)
@@ -88,7 +93,7 @@ class AdminCategoriesController extends Controller
 
     /**
      * Category View
-     * 
+     *
      * @return \Illuminate\View\View
      */
     public function edit($id, Request $request)
@@ -103,25 +108,25 @@ class AdminCategoriesController extends Controller
 
     /**
      * Category Update
-     * 
+     *
      * @return \Illuminate\View\View
      */
     public function update($id, Request $request)
     {
         $status = $this->repository->update($id, $request->all());
-        
+
         return redirect()->route($this->repository->setAdmin(true)->getActionRoute('listRoute'))->withFlashSuccess($this->editSuccessMessage);
     }
 
     /**
      * Category Delete
-     * 
+     *
      * @return \Illuminate\View\View
      */
     public function destroy($id)
     {
         $status = $this->repository->destroy($id);
-        
+
         return redirect()->route($this->repository->setAdmin(true)->getActionRoute('listRoute'))->withFlashSuccess($this->deleteSuccessMessage);
     }
 

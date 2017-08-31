@@ -92,6 +92,13 @@
                 </a>
             </li>
 
+            <li class="{{ active_class(Active::checkUriPattern('admin/emailer')) }}">
+                <a href="{{ route('admin.emailer.index') }}">
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                    <span>Emailer</span>
+                </a>
+            </li>
+
             <li class="{{ active_class(Active::checkUriPattern('admin/log-viewer*')) }} treeview">
                 <a href="#">
                     <i class="fa fa-list"></i>
