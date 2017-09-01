@@ -99,6 +99,13 @@
                 </a>
             </li>
 
+            <li class="{{ active_class(Active::checkUriPattern('admin/sms')) }}">
+                <a href="{{ route('admin.sms.index') }}">
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                    <span>SMS</span>
+                </a>
+            </li>
+
             <li class="{{ active_class(Active::checkUriPattern('admin/log-viewer*')) }} treeview">
                 <a href="#">
                     <i class="fa fa-list"></i>

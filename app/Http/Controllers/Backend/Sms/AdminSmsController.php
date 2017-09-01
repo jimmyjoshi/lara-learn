@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Emailer;
+namespace App\Http\Controllers\Backend\Sms;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\Datatables\Facades\Datatables;
-use App\Repositories\Emailer\EloquentEmailerRepository;
+use App\Repositories\Sms\EloquentSmsRepository;
 use App\Repositories\Subscriber\EloquentSubscriberRepository;
 use App\Repositories\Category\EloquentCategoryRepository;
 use App\Library\MailSender\MailSender;
 
 /**
- * Class AdminEmailerController
+ * Class AdminSmsController
  */
-class AdminEmailerController extends Controller
+class AdminSmsController extends Controller
 {
 	/**
 	 * Repository
@@ -27,28 +27,28 @@ class AdminEmailerController extends Controller
      *
      * @var string
      */
-    protected $createSuccessMessage = "Emailer Created Successfully!";
+    protected $createSuccessMessage = "Sms Created Successfully!";
 
     /**
      * Edit Success Message
      *
      * @var string
      */
-    protected $editSuccessMessage = "Emailer Edited Successfully!";
+    protected $editSuccessMessage = "Sms Edited Successfully!";
 
     /**
      * Delete Success Message
      *
      * @var string
      */
-    protected $deleteSuccessMessage = "Emailer Deleted Successfully";
+    protected $deleteSuccessMessage = "Sms Deleted Successfully";
 
 	/**
 	 * __construct
 	 *
 	 * @param EloquentEmailerRepository $repository
 	 */
-	public function __construct(EloquentEmailerRepository $repository)
+	public function __construct(EloquentSmsRepository $repository)
 	{
         $this->repository           = $repository;
         $this->subscriberRepository = new EloquentSubscriberRepository;

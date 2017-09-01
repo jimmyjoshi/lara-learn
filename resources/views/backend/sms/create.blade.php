@@ -18,7 +18,7 @@ i.jstree-icon.jstree-themeicon {
 
 @section('content')
     {{ Form::open([
-        'id'        => 'emailer-template-form',
+        'id'        => 'sms-template-form',
         'route'     => $repository->getActionRoute('storeRoute'),
         'class'     => 'form-horizontal',
         'role'      => 'form',
@@ -30,7 +30,7 @@ i.jstree-icon.jstree-themeicon {
                 <h3 class="box-title">Create {{ isset($repository->moduleTitle) ? $repository->moduleTitle : '' }}</h3>
 
                 <div class="box-tools pull-right">
-                    @include('common.emailer.header-buttons', [
+                    @include('common.sms.header-buttons', [
                         'listRoute'     => $repository->getActionRoute('listRoute'),
                         'createRoute'   => $repository->getActionRoute('createRoute')
                     ])
@@ -83,8 +83,8 @@ i.jstree-icon.jstree-themeicon {
                 @endforeach
             </div>
 
-            {{-- Emailer Form --}}
-            @include('common.emailer.form')
+            {{-- SmS Form --}}
+            @include('common.sms.form')
 
         </div>
 
@@ -102,7 +102,6 @@ i.jstree-icon.jstree-themeicon {
             </div>
         </div>
         {{ Form::hidden('subscribers', null, ['id' => 'subscribers'])}}
-        {{ Form::hidden('sendSmsFlag', 0, ['id' => 'sendSmsFlag'])}}
     {{ Form::close() }}
 @endsection
 
@@ -115,35 +114,14 @@ i.jstree-icon.jstree-themeicon {
 
 jQuery(document).ready(function()
 {
-    jQuery("#switch-change").on('change', function(e)
-    {
-        if(e.target.checked)
-        {
-            jQuery("#smsContainer").show();
-            jQuery("#sendSmsFlag").val(1);
-        }
-        else
-        {
-            jQuery("#sendSmsFlag").val(0);
-            jQuery("#smsContainer").hide();
-        }
-    });
-
-
-    setInterval(function()
-    {
-        BaseCommon.Utils.characterCount('subject', 'char-counter')
-    }, 55);
-
     setInterval(function()
     {
         BaseCommon.Utils.characterCount('sms', 'sms-char-counter')
     }, 55);
 
     //Get list of the checked items and send them to the serer
-    document.getElementById("emailer-template-form").onsubmit = function()
+    document.getElementById("sms-template-form").onsubmit = function()
     {
-
         var subscribers = [];
 
         jQuery("#subscribers").val('');

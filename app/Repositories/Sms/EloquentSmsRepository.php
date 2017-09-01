@@ -1,6 +1,5 @@
-<?php namespace App\Repositories\Emailer;
+<?php namespace App\Repositories\Sms;
 
-use App\Models\Emailer\Emailer;
 use App\Models\Sms\Sms;
 use App\Models\Access\User\User;
 use App\Models\Subscriber\Subscriber;
@@ -8,7 +7,7 @@ use App\Models\Template\Template;
 use App\Repositories\DbRepository;
 use App\Exceptions\GeneralException;
 
-class EloquentEmailerRepository extends DbRepository
+class EloquentSmsRepository extends DbRepository
 {
 	/**
 	 * Model
@@ -22,7 +21,7 @@ class EloquentEmailerRepository extends DbRepository
 	 *
 	 * @var string
 	 */
-	public $moduleTitle = 'Emailer';
+	public $moduleTitle = 'Sms';
 
 	/**
 	 * Table Headers
@@ -32,7 +31,7 @@ class EloquentEmailerRepository extends DbRepository
 	public $tableHeaders = [
 		'id' 				=> 'Sr No.',
 		'subscribername' 	=> 'Subscriber Name',
-		'subject' 			=> 'Subject',
+		'message' 			=> 'Message',
 		'username' 			=> 'Created By',
 		'created_at' 		=> 'Created At',
 		'actions' 			=> 'Actions'
@@ -56,9 +55,9 @@ class EloquentEmailerRepository extends DbRepository
 			'searchable' 	=> true,
 			'sortable'		=> true
 		],
-		'subject' =>	[
-			'data' 			=> 'subject',
-			'name' 			=> 'subject',
+		'message' =>	[
+			'data' 			=> 'message',
+			'name' 			=> 'message',
 			'searchable' 	=> true,
 			'sortable'		=> true
 		],
@@ -124,13 +123,13 @@ class EloquentEmailerRepository extends DbRepository
 	 * @var array
 	 */
 	public $moduleRoutes = [
-		'listRoute' 	=> 'emailer.index',
-		'createRoute' 	=> 'emailer.create',
-		'storeRoute' 	=> 'emailer.store',
-		'editRoute' 	=> 'emailer.edit',
-		'updateRoute' 	=> 'emailer.update',
-		'deleteRoute' 	=> 'emailer.destroy',
-		'dataRoute' 	=> 'emailer.get-list-data'
+		'listRoute' 	=> 'sms.index',
+		'createRoute' 	=> 'sms.create',
+		'storeRoute' 	=> 'sms.store',
+		'editRoute' 	=> 'sms.edit',
+		'updateRoute' 	=> 'sms.update',
+		'deleteRoute' 	=> 'sms.destroy',
+		'dataRoute' 	=> 'sms.get-list-data'
 	];
 
 	/**
@@ -139,10 +138,10 @@ class EloquentEmailerRepository extends DbRepository
 	 * @var array
 	 */
 	public $moduleViews = [
-		'listView' 		=> 'emailer.index',
-		'createView' 	=> 'emailer.create',
-		'editView' 		=> 'emailer.edit',
-		'deleteView' 	=> 'emailer.destroy',
+		'listView' 		=> 'sms.index',
+		'createView' 	=> 'sms.create',
+		'editView' 		=> 'sms.edit',
+		'deleteView' 	=> 'sms.destroy',
 	];
 
 	/**
@@ -151,11 +150,10 @@ class EloquentEmailerRepository extends DbRepository
 	 */
 	public function __construct()
 	{
-		$this->model 			= new Emailer;
+		$this->model 			= new Sms;
 		$this->userModel 		= new User;
 		$this->templateModel 	= new Template;
 		$this->subscriberModel	= new Subscriber;
-        $this->smsModel         = new Sms;
 	}
 
 	/**
@@ -167,51 +165,31 @@ class EloquentEmailerRepository extends DbRepository
 	 */
 	public function create($input, $subscribers = array())
 	{
-        $templateData = [
-			'subject' 	=> $input['subject'],
-			'body' 		=> $input['body'],
-			'user_id'	=> access()->user()->id
-		];
-
-		$templateModel 	= $this->templateModel->create($templateData);
-		$emailerData 	= [];
-        $smsData        = [];
-
-		foreach($subscribers as $subscriber)
-		{
-			$checkFirstChar = substr($subscriber, 0, 1);
-			if($checkFirstChar != 'j')
-			{
-				$emailerData[] = [
-					'user_id'		=> access()->user()->id,
-					'subscriber_id' => $subscriber,
-					'template_id'	=> $templateModel->id,
-					'schedule_time'	=> isset($input['schedule_time']) ? $input['schedule_time'] : date('Y-m-d H:i:s')
-				];
-
-                if(isset($input['sendSmsFlag']) && $input['sendSmsFlag'] == 1)
-                {
-                    $smsData[] = [
-                        'user_id'       => access()->user()->id,
-                        'subscriber_id' => $subscriber,
-                        'message'       => $input['sms'],
-                        'schedule_time' => isset($input['schedule_time']) ? $input['schedule_time'] : date('Y-m-d H:i:s')
-                    ];
-                }
-			}
-		}
-
-        if(isset($input['sendSmsFlag']) && $input['sendSmsFlag'] == 1)
+        if($subscribers)
         {
-            $this->smsModel->insert($smsData);
+            $smsData = [];
+
+            foreach($subscribers as $subscriber)
+    		{
+    			$checkFirstChar = substr($subscriber, 0, 1);
+    			if($checkFirstChar != 'j')
+    			{
+    				$smsData[] = [
+    					'user_id'	     => access()->user()->id,
+    					'subscriber_id'  => $subscriber,
+    					'message'	     => $input['sms'],
+    					'schedule_time'  => isset($input['schedule_time']) ? $input['schedule_time'] : date('Y-m-d H:i:s')
+    				];
+    			}
+    		}
+
+    		$model = $this->model->insert($smsData);
+
+    		if($model)
+    		{
+    			return $model;
+    		}
         }
-
-		$model = $this->model->insert($emailerData);
-
-		if($model)
-		{
-			return $model;
-		}
 
 		return false;
 	}
@@ -295,13 +273,12 @@ class EloquentEmailerRepository extends DbRepository
 			$this->model->getTable().'.id as id',
 			$this->model->getTable().'.send_status',
 			$this->model->getTable().'.schedule_time',
+            $this->model->getTable().'.message',
 			$this->model->getTable().'.send_at',
-			$this->userModel->getTable().'.name as username',
+            $this->model->getTable().'.created_at',
+            $this->userModel->getTable().'.name as username',
 			$this->subscriberModel->getTable().'.name as subscribername',
-			$this->subscriberModel->getTable().'.company_name as subscribercompanyname',
-			$this->templateModel->getTable().'.subject',
-			$this->templateModel->getTable().'.created_at',
-			$this->templateModel->getTable().'.body',
+			$this->subscriberModel->getTable().'.company_name as subscribercompanyname'
 		];
     }
 
@@ -313,7 +290,6 @@ class EloquentEmailerRepository extends DbRepository
     	return  $this->model->select($this->getTableFields())
     			->leftjoin($this->userModel->getTable(), $this->userModel->getTable().'.id', '=', $this->model->getTable().'.user_id')
     			->leftjoin($this->subscriberModel->getTable(), $this->subscriberModel->getTable().'.id', '=', $this->model->getTable().'.subscriber_id')
-    			->leftjoin($this->templateModel->getTable(), $this->templateModel->getTable().'.id', '=', $this->model->getTable().'.template_id')
     			->get();
     }
 
@@ -382,24 +358,5 @@ class EloquentEmailerRepository extends DbRepository
     	unset($clientColumns['username']);
 
     	return json_encode($this->setTableStructure($clientColumns));
-    }
-
-    /**
-     * Get Subscriber Categories
-     *
-     * @return array
-     */
-    public function getSubscriberCategories()
-    {
-    	$userId 	= access()->user()->id;
-    	$categories = $this->categoryModel->select(['id', 'name'])->where(['user_id' => $userId, 'status' => 1 ])->get();
-    	$result 	= [];
-
-    	foreach($categories as $category)
-    	{
-			$result[$category->id] = $category->name;
-    	}
-
-    	return $result;
     }
 }

@@ -1,22 +1,30 @@
-<?php namespace App\Models\Access\Permission\Traits\Attribute;
+<?php namespace App\Models\Sms\Traits\Attribute;
 
 /**
  * Trait Attribute
  *
- * @author Justin Bevan justin@smokerschoiceusa.com
+ * @author Anuj Jaha er.anujjaha@gmail.com
  */
 
 use File;
-use App\Repositories\Sms\EloquentSmsRepository;
+use App\Repositories\Emailer\EloquentEmailerRepository;
 
 trait Attribute
 {
 	/**
 	 * @return string
 	 */
-	public function getEditButtonAttribute($routes, $prefix = 'admin')
+	public function getEditButtonAttribute($routes, $prefix = 'admin', $isAdmin = false)
 	{
-		return '<a href="'.route($prefix .'.'. $routes->editRoute, $this).'" class="btn btn-xs btn-primary"><i class="fa fa-pencil" data-toggle="tooltip" data-placement="top" title="Edit"></i></a> ';
+		if($isAdmin)
+		{
+			$id = $this->id;
+		}
+		else
+		{
+			$id = hasher()->encode($this->id);
+		}
+		return '<a href="'.route($prefix .'.'. $routes->editRoute, $id).'" class="btn btn-xs btn-primary"><i class="fa fa-pencil" data-toggle="tooltip" data-placement="top" title="Edit"></i></a> ';
 	}
 
 	/**
@@ -37,7 +45,7 @@ trait Attribute
 	 */
 	public function getActionButtonsAttribute()
 	{
-		$repository = new EloquentSmsRepository;
+		$repository = new EloquentEmailerRepository;
 
 		$routes = $repository->getModuleRoutes();
 
@@ -49,10 +57,10 @@ trait Attribute
 	 */
 	public function getAdminActionButtonsAttribute()
 	{
-		$repository = new EloquentSmsRepository;
+		$repository = new EloquentEmailerRepository;
 
 		$routes = $repository->getModuleRoutes();
 
-		return $this->getEditButtonAttribute($routes, $repository->adminRoutePrefix) . $this->getDeleteButtonAttribute($routes, $repository->adminRoutePrefix);
+		return $this->getEditButtonAttribute($routes, $repository->adminRoutePrefix, true) . $this->getDeleteButtonAttribute($routes, $repository->adminRoutePrefix);
 	}
 }

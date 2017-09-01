@@ -11,6 +11,7 @@
         <!-- Meta -->
         <meta name="description" content="@yield('meta_description', 'Default Description')">
         <meta name="author" content="@yield('meta_author', 'Anthony Rappa')">
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
         @yield('meta')
 
         <!-- Styles -->
@@ -70,7 +71,15 @@
         <!-- JavaScripts -->
         @yield('before-scripts')
         {{ Html::script(mix('js/backend.js')) }}
+        {{ Html::script('js/plugin/alphanum/jquery-alphanum.js') }}
+
+        <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
         <script type="text/javascript" src="{!! asset('js/custom/custom.js') !!}"></script>
+        <script type="text/javascript">
+            BaseCommon.Utils.validateInput();
+
+        </script>
+
         @yield('after-scripts')
     </body>
 </html>

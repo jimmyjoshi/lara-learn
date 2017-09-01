@@ -241,6 +241,66 @@ var BaseCommon =
 			        'colvis'
 			    ]
 			});
+		},
+
+		/**
+		 * Validate Input
+		 *
+		 */
+		validateInput: function()
+		{
+		    jQuery(document.querySelectorAll('[data-alnum-type]')).each(function()
+		    {
+		        var element             = jQuery(this),
+		            inputType           = jQuery(this).attr('data-alnum-type'),
+		            length              = jQuery(this).attr('data-alnum-length') || NaN,
+		            disAllowCharacters  = jQuery(this).attr('data-alnum-disallow') || '',
+		            allowSpace          = jQuery(this).attr('data-alnum-allow-space') || true,
+		            allowNumeric        = jQuery(this).attr('data-alnum-allow-numeric') || true,
+		            allowUpperCase      = jQuery(this).attr('data-alnum-allow-uppercase') || true,
+		            allowLowerCase      = jQuery(this).attr('data-alnum-allow-lowercase') || true,
+		            allowCharacters     = jQuery(this).attr('data-alnum-allow') || '';
+
+		            switch(inputType)
+		            {
+		                case 'alphanum':
+
+		                    element.alphanum({
+		                        disallow           : disAllowCharacters,
+		                        allow              : allowCharacters,
+		                        allowSpace         : allowSpace,
+		                        allowNumeric       : allowNumeric,
+		                        allowUpper         : allowUpperCase,
+		                        allowLower         : allowLowerCase,
+		                        maxLength          : length
+		                    });
+
+		                    break;
+
+		                case 'numeric':
+
+		                    element.numeric({
+		                        disallow:  '-',
+		                        maxLength: length
+		                    });
+
+		                    break;
+
+		                default:
+
+		                    element.alphanum({
+		                        disallow           : disAllowCharacters,
+		                        allow              : allowCharacters,
+		                        allowSpace         : allowSpace,
+		                        allowNumeric       : allowNumeric,
+		                        allowUpper         : allowUpperCase,
+		                        allowLower         : allowLowerCase,
+		                        maxLength          : length
+		                    });
+
+		                    break;
+		            }
+		    });
 		}
 	}
 };
