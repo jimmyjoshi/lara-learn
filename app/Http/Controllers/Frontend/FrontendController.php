@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\Subscriber\EloquentSubscriberRepository;
 
 /**
  * Class FrontendController.
@@ -14,7 +15,8 @@ class FrontendController extends Controller
      */
     public function index()
     {
-        return view('frontend.index');
+        $repo = new EloquentSubscriberRepository;
+        return view('frontend.index')->with(['repository' => $repo]);
     }
 
     /**

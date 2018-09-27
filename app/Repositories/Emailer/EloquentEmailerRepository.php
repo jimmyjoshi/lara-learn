@@ -34,7 +34,8 @@ class EloquentEmailerRepository extends DbRepository
 		'subscribername' 	=> 'Subscriber Name',
 		'subject' 			=> 'Subject',
 		'username' 			=> 'Created By',
-		'created_at' 		=> 'Created At',
+        'read_at'           => 'Created At',
+		'created_at' 		=> 'Read At',
 		'actions' 			=> 'Actions'
 	];
 
@@ -74,7 +75,12 @@ class EloquentEmailerRepository extends DbRepository
 			'searchable' 	=> false,
 			'sortable'		=> false
 		],
-
+        'read_at' => [
+            'data'          => 'read_at',
+            'name'          => 'read_at',
+            'searchable'    => false,
+            'sortable'      => false
+        ],
 		'actions' => [
 			'data' 			=> 'actions',
 			'name' 			=> 'actions',
@@ -186,6 +192,7 @@ class EloquentEmailerRepository extends DbRepository
 					'user_id'		=> access()->user()->id,
 					'subscriber_id' => $subscriber,
 					'template_id'	=> $templateModel->id,
+                    'created_at'    => date('Y-m-d H:i:s'),
 					'schedule_time'	=> isset($input['schedule_time']) ? $input['schedule_time'] : date('Y-m-d H:i:s')
 				];
 
@@ -296,11 +303,12 @@ class EloquentEmailerRepository extends DbRepository
 			$this->model->getTable().'.send_status',
 			$this->model->getTable().'.schedule_time',
 			$this->model->getTable().'.send_at',
+            $this->model->getTable().'.created_at',
+            $this->model->getTable().'.read_at',
 			$this->userModel->getTable().'.name as username',
 			$this->subscriberModel->getTable().'.name as subscribername',
 			$this->subscriberModel->getTable().'.company_name as subscribercompanyname',
 			$this->templateModel->getTable().'.subject',
-			$this->templateModel->getTable().'.created_at',
 			$this->templateModel->getTable().'.body',
 		];
     }
@@ -401,5 +409,21 @@ class EloquentEmailerRepository extends DbRepository
     	}
 
     	return $result;
+    }
+
+    /**
+     * ReadEmail
+     *
+     * @param string $id
+     * @return bool
+     */
+    public function readEmail($id)
+    {
+        $model = $this->model->find(hasher()->decode($id));
+
+        $model->read_at     = date('Y-m-d H:i:s');
+        $model->read_status = 1;
+
+        return $model->save();
     }
 }

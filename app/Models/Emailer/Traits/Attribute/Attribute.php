@@ -16,9 +16,10 @@ trait Attribute
 	 */
 	public function getEditButtonAttribute($routes, $prefix = 'admin', $isAdmin = false)
 	{
+		return ;
 		if($isAdmin)
 		{
-			$id = $this->id;	
+			$id = $this->id;
 		}
 		else
 		{
@@ -50,7 +51,7 @@ trait Attribute
 		$routes = $repository->getModuleRoutes();
 
 		return $this->getEditButtonAttribute($routes, $repository->clientRoutePrefix) . $this->getDeleteButtonAttribute($routes, $repository->clientRoutePrefix);
-	}   
+	}
 
 	/**
 	 * @return string
@@ -62,5 +63,5 @@ trait Attribute
 		$routes = $repository->getModuleRoutes();
 
 		return $this->getEditButtonAttribute($routes, $repository->adminRoutePrefix, true) . $this->getDeleteButtonAttribute($routes, $repository->adminRoutePrefix);
-	}   
+	}
 }

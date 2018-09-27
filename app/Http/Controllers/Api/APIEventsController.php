@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
@@ -7,64 +6,67 @@ use App\Http\Transformers\EventTransformer;
 use App\Http\Controllers\Api\BaseApiController;
 use App\Repositories\Event\EloquentEventRepository;
 
-class APIEventsController extends BaseApiController 
-{   
+class APIEventsController extends BaseApiController
+{
     /**
      * Event Transformer
-     * 
+     *
      * @var Object
      */
     protected $eventTransformer;
 
     /**
      * Repository
-     * 
+     *
      * @var Object
      */
     protected $repository;
 
     /**
-     * __construct
-     * 
-     * @param EventTransformer $eventTransformer
+     * PrimaryKey
+     *
+     * @var string
      */
-    public function __construct(EloquentEventRepository $repository, EventTransformer $eventTransformer)
-    {
-        parent::__construct();
+    protected $primaryKey = 'eventId';
 
-        $this->repository       = $repository;
-        $this->eventTransformer = $eventTransformer;
+    /**
+     * __construct
+     *
+     */
+    public function __construct()
+    {
+        $this->repository       = new EloquentEventRepository();
+        $this->eventTransformer = new EventTransformer();
     }
 
     /**
      * List of All Events
-     * 
+     *
      * @param Request $request
      * @return json
      */
-    public function index(Request $request) 
+    public function index(Request $request)
     {
-        $userInfo   = $this->getApiUserInfo();
-        $events     = $this->repository->getAll()->toArray();
+        $paginate   = $request->get('paginate') ? $request->get('paginate') : false;
+        $orderBy    = $request->get('orderBy') ? $request->get('orderBy') : 'id';
+        $order      = $request->get('order') ? $request->get('order') : 'ASC';
+        $items      = $paginate ? $this->repository->model->orderBy($orderBy, $order)->paginate($paginate)->items() : $this->repository->getAll($orderBy, $order);
 
-        if($events && count($events))
+        if(isset($items) && count($items))
         {
-            $eventsData     = $this->eventTransformer->transformCollection($events);
-            $responseData   = array_merge($userInfo, ['events' => $eventsData]);
+            $itemsOutput = $this->eventTransformer->transformCollection($items);
 
-            return $this->successResponse($responseData);
+            return $this->successResponse($itemsOutput);
         }
 
-        $error = [
-            'reason' => 'Unable to find Events!'
-        ];
-
-        return $this->setStatusCode(400)->failureResponse($error, 'No Events Found !');
+        return $this->setStatusCode(400)->failureResponse([
+            'message' => 'Unable to find Events!'
+            ], 'No Events Found !');
     }
 
     /**
      * Create
-     * 
+     *
      * @param Request $request
      * @return string
      */
@@ -74,72 +76,95 @@ class APIEventsController extends BaseApiController
 
         if($model)
         {
-            $responseData = $this->eventTransformer->createEvent($model);
+            $responseData = $this->eventTransformer->transform($model);
 
             return $this->successResponse($responseData, 'Event is Created Successfully');
         }
 
-        $error = [
+        return $this->setStatusCode(400)->failureResponse([
             'reason' => 'Invalid Inputs'
-        ];
+            ], 'Something went wrong !');
+    }
 
-        return $this->setStatusCode(400)->failureResponse($error, 'Something went wrong !');
+    /**
+     * View
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function show(Request $request)
+    {
+        $itemId = (int) hasher()->decode($request->get($this->primaryKey));
+
+        if($itemId)
+        {
+            $itemData = $this->repository->getById($itemId);
+
+            if($itemData)
+            {
+                $responseData = $this->eventTransformer->transform($itemData);
+
+                return $this->successResponse($responseData, 'View Item');
+            }
+        }
+
+        return $this->setStatusCode(400)->failureResponse([
+            'reason' => 'Invalid Inputs or Item not exists !'
+            ], 'Something went wrong !');
     }
 
     /**
      * Edit
-     * 
+     *
      * @param Request $request
      * @return string
      */
     public function edit(Request $request)
     {
-        $eventId    = (int) $request->event_id;
-        $model      = $this->repository->update($eventId, $request->all());
+        $itemId = (int) hasher()->decode($request->get($this->primaryKey));
 
-        if($model)
+        if($itemId)
         {
-            $eventData      = $this->repository->getById($eventId);
-            $responseData   = $this->eventTransformer->transform($eventData);
+            $status = $this->repository->update($itemId, $request->all());
 
-            return $this->successResponse($responseData, 'Event is Edited Successfully');
+            if($status)
+            {
+                $itemData       = $this->repository->getById($itemId);
+                $responseData   = $this->eventTransformer->transform($itemData);
+
+                return $this->successResponse($responseData, 'Event is Edited Successfully');
+            }
         }
 
-        $error = [
+        return $this->setStatusCode(400)->failureResponse([
             'reason' => 'Invalid Inputs'
-        ];
-
-        return $this->setStatusCode(400)->failureResponse($error, 'Something went wrong !');
+        ], 'Something went wrong !');
     }
 
     /**
      * Delete
-     * 
+     *
      * @param Request $request
      * @return string
      */
     public function delete(Request $request)
     {
-        $eventId = (int) $request->event_id;
+        $itemId = (int) hasher()->decode($request->get($this->primaryKey));
 
-        if($eventId)
+        if($itemId)
         {
-            $status = $this->repository->destroy($eventId);
+            $status = $this->repository->destroy($itemId);
 
             if($status)
             {
-                $responseData = [
+                return $this->successResponse([
                     'success' => 'Event Deleted'
-                ];
-
-                return $this->successResponse($responseData, 'Event is Deleted Successfully');
+                ], 'Event is Deleted Successfully');
             }
         }
 
-        $error = [
+        return $this->setStatusCode(404)->failureResponse([
             'reason' => 'Invalid Inputs'
-        ];
-
-        return $this->setStatusCode(404)->failureResponse($error, 'Something went wrong !');
+        ], 'Something went wrong !');
     }
 }

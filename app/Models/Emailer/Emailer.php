@@ -9,11 +9,12 @@
 use App\Models\BaseModel;
 use App\Models\Emailer\Traits\Attribute\Attribute;
 use App\Models\Emailer\Traits\Relationship\Relationship;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Emailer extends BaseModel
 {
-    use Attribute, Relationship;
-    
+    use Attribute, Relationship, SoftDeletes;
+
     /**
      * Database Table
      *
@@ -21,10 +22,18 @@ class Emailer extends BaseModel
     protected $table = "data_mailers";
 
     /**
+     * Timestamp
+     *
+     * @var boolean
+     */
+    public $timestamp = true;
+
+    /**
      * Fillable Database Fields
      *
      */
     protected $fillable = [
+        'server_id',
         'user_id',
         'subject',
         'body',
@@ -35,4 +44,11 @@ class Emailer extends BaseModel
      *
      */
     protected $guarded = ["id"];
+
+    /**
+     * Dates
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
 }

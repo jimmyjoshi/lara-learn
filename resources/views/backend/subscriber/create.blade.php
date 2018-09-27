@@ -1,3 +1,4 @@
+
 @extends ('backend.layouts.app')
 
 @section ('title', isset($repository->moduleTitle) ? 'Create - '. $repository->moduleTitle : 'Create')
@@ -14,6 +15,7 @@
         'route'     => $repository->getActionRoute('storeRoute'),
         'class'     => 'form-horizontal',
         'role'      => 'form',
+        'files'     => true,
         'method'    => 'post'
     ])}}
 
@@ -22,7 +24,7 @@
                 <h3 class="box-title">Create {{ isset($repository->moduleTitle) ? $repository->moduleTitle : '' }}</h3>
 
                 <div class="box-tools pull-right">
-                    @include('common.subscriber.header-buttons', [
+                    @include('common.'.strtolower($repository->moduleTitle).'.header-buttons', [
                         'listRoute'     => $repository->getActionRoute('listRoute'),
                         'createRoute'   => $repository->getActionRoute('createRoute')
                     ])
@@ -31,7 +33,7 @@
 
             {{-- Event Form --}}
             @include('common.subscriber.form')
-            
+
         </div>
 
         <div class="box box-info">

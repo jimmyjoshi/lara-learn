@@ -5,6 +5,26 @@
 
         <example></example>
 
+        {{-- {{ dd($repository->model->paginate(1)) }} --}}
+
+        <table class="table">
+            <tr>
+                <td>Company Name</td>
+                <td>Name</td>
+            </tr>
+            @foreach($repository->model->paginate(1) as $subscriber)
+                <tr>
+                    <td>{!! $subscriber->company_name !!}</td>
+                    <td>{!! $subscriber->name !!}</td>
+                </tr>
+            @endforeach
+            <tr>
+                <td colspan="3">
+                    {{ $repository->model->paginate(1)->links() }}
+                </td>
+            </tr>
+        </table>
+
         <div class="col-xs-12">
 
             <div class="panel panel-default">

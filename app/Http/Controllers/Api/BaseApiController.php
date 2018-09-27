@@ -25,9 +25,11 @@ class BaseApiController extends BaseController
      */
     protected $userTransformer;
 
+    public $successData;
+
     /**
      * __construct
-     * 
+     *
      * @param UserTransformer $userTransformer
      */
     public function __construct()
@@ -41,13 +43,13 @@ class BaseApiController extends BaseController
      * @var integer
      */
     protected $statusCode = 200;
-    
+
     /**
      * get the status code
      *
      * @return statuscode
      */
-    
+
     public function getStatusCode()
     {
     	return $this->statusCode;
@@ -65,7 +67,7 @@ class BaseApiController extends BaseController
 
     /**
      * Get Api User Info
-     * 
+     *
      * @return array
      */
     public function getApiUserInfo()
@@ -86,16 +88,29 @@ class BaseApiController extends BaseController
     	return $this;
     }
 
+    public function setSuccessData($data)
+    {
+        $this->successData = $data;
+        return $this;
+    }
+
+    public function getSuccessData($data)
+    {
+        return $this->successData;
+    }
+
     /**
      * Success Response
-     * 
+     *
      * @param array $data
      * @param string $message
      * @param int $code
      * @return json|string
      */
-    public function successResponse($data = array(), $message = 'Success', $code = 200)
+    public function successResponse($data = null, $message = 'Success', $code = 200)
     {
+        $data = isset($data) ? $data : $this->successData;
+
         $response = [
             'data'      => $data,
             'status'    => true,
@@ -103,15 +118,15 @@ class BaseApiController extends BaseController
             'code'      => $code ? $code : $this->getStatusCode()
         ];
 
-        return response()->json([
-            (object)$response],
-            $this->getStatusCode()  
+        return response()->json(
+            (object)$response,
+            $this->getStatusCode()
         );
     }
 
     /**
      * Failure Response
-     * 
+     *
      * @param array $data
      * @param string $message
      * @param int $code
@@ -126,9 +141,9 @@ class BaseApiController extends BaseController
             'code'      => $code ? $code : $this->getStatusCode()
         ];
 
-        return response()->json([
-            (object)$response],
-            $this->getStatusCode()  
+        return response()->json(
+            (object)$response,
+            $this->getStatusCode()
         );
     }
 

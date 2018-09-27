@@ -9,14 +9,14 @@ class EloquentEventRepository extends DbRepository implements EventRepositoryCon
 {
 	/**
 	 * Event Model
-	 * 
+	 *
 	 * @var Object
 	 */
 	public $model;
 
 	/**
 	 * Module Title
-	 * 
+	 *
 	 * @var string
 	 */
 	public $moduleTitle = 'Event';
@@ -44,79 +44,79 @@ class EloquentEventRepository extends DbRepository implements EventRepositoryCon
 		'name' =>	[
 			'data' 			=> 'name',
 			'name' 			=> 'name',
-			'searchable' 	=> true, 
+			'searchable' 	=> true,
 			'sortable'		=> true
 		],
 		'username' => [
 			'data' 			=> 'username',
 			'name' 			=> 'username',
-			'searchable' 	=> true, 
+			'searchable' 	=> true,
 			'sortable'		=> true
 		],
 		'title' => [
 			'data' 			=> 'title',
 			'name' 			=> 'title',
-			'searchable' 	=> true, 
+			'searchable' 	=> true,
 			'sortable'		=> true
 		],
 		'start_date' => [
 			'data' 			=> 'start_date',
 			'name' 			=> 'start_date',
-			'searchable' 	=> false, 
+			'searchable' 	=> false,
 			'sortable'		=> false
 		],
 		'end_date' => [
 			'data' 			=> 'end_date',
 			'name' 			=> 'end_date',
-			'searchable' 	=> false, 
+			'searchable' 	=> false,
 			'sortable'		=> false
 		],
 		'actions' => [
 			'data' 			=> 'actions',
 			'name' 			=> 'actions',
-			'searchable' 	=> false, 
+			'searchable' 	=> false,
 			'sortable'		=> false
 		]
 	];
 
 	/**
 	 * Is Admin
-	 * 
+	 *
 	 * @var boolean
 	 */
 	protected $isAdmin = false;
 
 	/**
 	 * Admin Route Prefix
-	 * 
+	 *
 	 * @var string
 	 */
 	public $adminRoutePrefix = 'admin';
 
 	/**
 	 * Client Route Prefix
-	 * 
+	 *
 	 * @var string
 	 */
 	public $clientRoutePrefix = 'frontend';
 
 	/**
 	 * Admin View Prefix
-	 * 
+	 *
 	 * @var string
 	 */
 	public $adminViewPrefix = 'backend';
 
 	/**
 	 * Client View Prefix
-	 * 
+	 *
 	 * @var string
 	 */
 	public $clientViewPrefix = 'frontend';
 
 	/**
 	 * Module Routes
-	 * 
+	 *
 	 * @var array
 	 */
 	public $moduleRoutes = [
@@ -131,7 +131,7 @@ class EloquentEventRepository extends DbRepository implements EventRepositoryCon
 
 	/**
 	 * Module Views
-	 * 
+	 *
 	 * @var array
 	 */
 	public $moduleViews = [
@@ -159,8 +159,8 @@ class EloquentEventRepository extends DbRepository implements EventRepositoryCon
 	 */
 	public function create($input)
 	{
-		$input = $this->prepareInputData($input, true);
-		$model = $this->model->create($input);
+        $input = $this->prepareInputData($input, true);
+        $model = $this->model->create($input);
 
 		if($model)
 		{
@@ -168,7 +168,7 @@ class EloquentEventRepository extends DbRepository implements EventRepositoryCon
 		}
 
 		return false;
-	}	
+	}
 
 	/**
 	 * Update Event
@@ -183,8 +183,8 @@ class EloquentEventRepository extends DbRepository implements EventRepositoryCon
 
 		if($model)
 		{
-			$input = $this->prepareInputData($input);		
-			
+			$input = $this->prepareInputData($input);
+
 			return $model->update($input);
 		}
 
@@ -201,7 +201,7 @@ class EloquentEventRepository extends DbRepository implements EventRepositoryCon
 	public function destroy($id)
 	{
 		$model = $this->model->find($id);
-			
+
 		if($model)
 		{
 			return $model->delete();
@@ -219,7 +219,7 @@ class EloquentEventRepository extends DbRepository implements EventRepositoryCon
      */
     public function getAll($orderBy = 'id', $sort = 'asc')
     {
-    	return $this->model->all();
+    	return $this->model->orderBy($orderBy, $sort)->get();
     }
 
 	/**
@@ -234,13 +234,13 @@ class EloquentEventRepository extends DbRepository implements EventRepositoryCon
     	{
     		return $this->model->find($id);
     	}
-        
+
         return false;
-    }   
+    }
 
     /**
      * Get Table Fields
-     * 
+     *
      * @return array
      */
     public function getTableFields()
@@ -262,7 +262,7 @@ class EloquentEventRepository extends DbRepository implements EventRepositoryCon
     {
     	return  $this->model->select($this->getTableFields())
     			->leftjoin($this->userModel->getTable(), $this->userModel->getTable().'.id', '=', $this->model->getTable().'.user_id')->get();
-        
+
     }
 
     /**
@@ -279,7 +279,7 @@ class EloquentEventRepository extends DbRepository implements EventRepositoryCon
 
     /**
      * Prepare Input Data
-     * 
+     *
      * @param array $input
      * @param bool $isCreate
      * @return array
@@ -288,28 +288,7 @@ class EloquentEventRepository extends DbRepository implements EventRepositoryCon
     {
     	if($isCreate)
     	{
-    		$input = array_merge($input, ['user_id' => access()->user()->id]);
-    	}
-
-
-    	if(isset($input['start_date']))
-    	{
-    		$input['start_date'] = date('Y-m-d', strtotime($input['start_date']));
-    	}
-
-    	if(isset($input['end_date']))
-    	{
-    		$input['end_date'] = date('Y-m-d', strtotime($input['end_date']));
-    	}
-
-    	if(! isset($input['start_date']))
-    	{
-    		$input['start_date'] = date('Y-m-d');
-    	}
-
-    	if(! isset($input['end_date']))
-    	{
-    		$input['end_date'] = date('Y-m-d');
+    		//$input = array_merge($input, ['user_id' => access()->user()->id]);
     	}
 
     	return $input;
@@ -317,7 +296,7 @@ class EloquentEventRepository extends DbRepository implements EventRepositoryCon
 
     /**
      * Get Table Headers
-     * 
+     *
      * @return string
      */
     public function getTableHeaders()
@@ -349,7 +328,7 @@ class EloquentEventRepository extends DbRepository implements EventRepositoryCon
     	$clientColumns = $this->tableColumns;
 
     	unset($clientColumns['username']);
-    	
+
     	return json_encode($this->setTableStructure($clientColumns));
     }
 }

@@ -10,14 +10,14 @@ class EloquentSubscriberRepository extends DbRepository
 {
 	/**
 	 * Model
-	 * 
+	 *
 	 * @var Object
 	 */
 	public $model;
 
 	/**
 	 * Module Title
-	 * 
+	 *
 	 * @var string
 	 */
 	public $moduleTitle = 'Subscriber';
@@ -46,90 +46,91 @@ class EloquentSubscriberRepository extends DbRepository
 		'name' =>	[
 			'data' 			=> 'name',
 			'name' 			=> 'name',
-			'searchable' 	=> true, 
+			'searchable' 	=> true,
 			'sortable'		=> true
 		],
 		'company_name' =>	[
 			'data' 			=> 'company_name',
 			'name' 			=> 'company_name',
-			'searchable' 	=> true, 
+			'searchable' 	=> true,
 			'sortable'		=> true
 		],
 		'categoryname' => [
 			'data' 			=> 'categoryname',
 			'name' 			=> 'categoryname',
-			'searchable' 	=> true, 
+			'searchable' 	=> true,
 			'sortable'		=> true
 		],
 		'mobile' =>	[
 			'data' 			=> 'mobile',
 			'name' 			=> 'mobile',
-			'searchable' 	=> true, 
+			'searchable' 	=> true,
 			'sortable'		=> true
 		],
 		'email_id' =>	[
 			'data' 			=> 'email_id',
 			'name' 			=> 'email_id',
-			'searchable' 	=> true, 
+			'searchable' 	=> true,
 			'sortable'		=> true
 		],
 		'username' => [
 			'data' 			=> 'username',
 			'name' 			=> 'username',
-			'searchable' 	=> true, 
+			'searchable' 	=> true,
 			'sortable'		=> true
 		],
 		'actions' => [
 			'data' 			=> 'actions',
 			'name' 			=> 'actions',
-			'searchable' 	=> false, 
+			'searchable' 	=> false,
 			'sortable'		=> false
 		]
 	];
 
 	/**
 	 * Is Admin
-	 * 
+	 *
 	 * @var boolean
 	 */
 	protected $isAdmin = false;
 
 	/**
 	 * Admin Route Prefix
-	 * 
+	 *
 	 * @var string
 	 */
 	public $adminRoutePrefix = 'admin';
 
 	/**
 	 * Client Route Prefix
-	 * 
+	 *
 	 * @var string
 	 */
 	public $clientRoutePrefix = 'frontend';
 
 	/**
 	 * Admin View Prefix
-	 * 
+	 *
 	 * @var string
 	 */
 	public $adminViewPrefix = 'backend';
 
 	/**
 	 * Client View Prefix
-	 * 
+	 *
 	 * @var string
 	 */
 	public $clientViewPrefix = 'frontend';
 
 	/**
 	 * Module Routes
-	 * 
+	 *
 	 * @var array
 	 */
 	public $moduleRoutes = [
 		'listRoute' 	=> 'subscriber.index',
-		'createRoute' 	=> 'subscriber.create',
+        'createRoute'   => 'subscriber.create',
+		'uploadSaveRoute' 	=> 'subscriber.upload-store',
 		'storeRoute' 	=> 'subscriber.store',
 		'editRoute' 	=> 'subscriber.edit',
 		'updateRoute' 	=> 'subscriber.update',
@@ -139,11 +140,12 @@ class EloquentSubscriberRepository extends DbRepository
 
 	/**
 	 * Module Views
-	 * 
+	 *
 	 * @var array
 	 */
 	public $moduleViews = [
-		'listView' 		=> 'subscriber.index',
+        'listView'      => 'subscriber.index',
+		'uploadView' 	=> 'subscriber.upload',
 		'createView' 	=> 'subscriber.create',
 		'editView' 		=> 'subscriber.edit',
 		'deleteView' 	=> 'subscriber.destroy',
@@ -177,7 +179,7 @@ class EloquentSubscriberRepository extends DbRepository
 		}
 
 		return false;
-	}	
+	}
 
 	/**
 	 * Update Subscriber
@@ -192,8 +194,8 @@ class EloquentSubscriberRepository extends DbRepository
 
 		if($model)
 		{
-			$input = $this->prepareInputData($input);		
-			
+			$input = $this->prepareInputData($input);
+
 			return $model->update($input);
 		}
 
@@ -210,7 +212,7 @@ class EloquentSubscriberRepository extends DbRepository
 	public function destroy($id)
 	{
 		$model = $this->model->find($id);
-			
+
 		if($model)
 		{
 			return $model->delete();
@@ -243,13 +245,13 @@ class EloquentSubscriberRepository extends DbRepository
     	{
     		return $this->model->find($id);
     	}
-        
+
         return false;
-    }   
+    }
 
     /**
      * Get Table Fields
-     * 
+     *
      * @return array
      */
     public function getTableFields()
@@ -274,7 +276,7 @@ class EloquentSubscriberRepository extends DbRepository
     			->leftjoin($this->userModel->getTable(), $this->userModel->getTable().'.id', '=', $this->model->getTable().'.user_id')
     			->leftjoin($this->categoryModel->getTable(), $this->categoryModel->getTable().'.id', '=', $this->model->getTable().'.category_id')
     			->get();
-        
+
     }
 
     /**
@@ -291,7 +293,7 @@ class EloquentSubscriberRepository extends DbRepository
 
     /**
      * Prepare Input Data
-     * 
+     *
      * @param array $input
      * @param bool $isCreate
      * @return array
@@ -308,7 +310,7 @@ class EloquentSubscriberRepository extends DbRepository
 
     /**
      * Get Table Headers
-     * 
+     *
      * @return string
      */
     public function getTableHeaders()
@@ -340,13 +342,13 @@ class EloquentSubscriberRepository extends DbRepository
     	$clientColumns = $this->tableColumns;
 
     	unset($clientColumns['username']);
-    	
+
     	return json_encode($this->setTableStructure($clientColumns));
     }
 
     /**
      * Get Subscriber Categories
-     * 
+     *
      * @return array
      */
     public function getSubscriberCategories()
@@ -355,7 +357,7 @@ class EloquentSubscriberRepository extends DbRepository
     	$categories = $this->categoryModel->select(['id', 'name'])->where(['user_id' => $userId, 'status' => 1 ])->get();
     	$result 	= [];
 
-    	foreach($categories as $category) 
+    	foreach($categories as $category)
     	{
 			$result[$category->id] = $category->name;
     	}

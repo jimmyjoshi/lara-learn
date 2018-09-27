@@ -17,8 +17,8 @@ return [
     */
 
     'mailgun' => [
-        'domain' => env('MAILGUN_DOMAIN'),
-        'secret' => env('MAILGUN_SECRET'),
+        'domain' => env('sandbox7d0da142d5ef4db08c35f436e5b10a9c.mailgun.org'),
+        'secret' => env('key-8e3adc366c2d8a2feee563d6246196de'),
     ],
 
     'ses' => [
@@ -104,5 +104,9 @@ return [
         'redirect'      => env('TWITTER_REDIRECT'),
         'scopes'        => [],
         'with'          => [],
+    ],
+
+    'stripe' => [
+        'secret' => 'sk_test_HULXDAd7QAL1mZjpQhKpdIg7',
     ],
 ];

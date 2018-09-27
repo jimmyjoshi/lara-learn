@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use Cartalyst\Stripe\Stripe;
 
 /**
  * Class DashboardController.
@@ -14,6 +15,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('backend.dashboard');
+      return view('backend.dashboard');
     }
 }

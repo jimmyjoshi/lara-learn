@@ -4,6 +4,7 @@ use App\Models\Emailer\Emailer;
 use App\Models\MailerLog\MailerLog;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use App\Models\ServerConfig\ServerConfig;
 
 /**
  * Class MailSender
@@ -18,27 +19,40 @@ class MailSender
 
     public function __construct($limit = 100)
     {
-        $this->limit = $limit;
+        $this->limit            = $limit;
+        $this->serverConfig     = new ServerConfig;
     }
 
     public function sendAllEmails()
     {
         $mailer         = new Emailer;
         $mailerLog      = new MailerLog;
+
         $successEntries = [];
 
         $mailers = $mailer->with(['subscriber', 'template'])->where(['send_status' => 0 ])->limit($this->limit)->get();
 
         foreach($mailers as $mailer)
         {
-            if($this->sendMail($mailer))
+            $serverInfo = $this->sendMail($mailer);
+
+            if($serverInfo)
             {
+                $viewEmail = '';
+
+                if(1 == 1)
+                {
+                    $mailerId = hasher()->encode($mailer->id);
+                    $viewEmail = '<img style="display: none;" src="'.url('/').DIRECTORY_SEPARATOR.'email-read'. DIRECTORY_SEPARATOR .$mailerId.'">';
+                }
+
                 $mailerLogData[] = [
                     'subscriber_id' => $mailer->subscriber_id,
                     'subject'       => $mailer->template->subject,
-                    'body'          => $mailer->template->body,
+                    'body'          => $mailer->template->body . $viewEmail,
                 ];
 
+                Emailer::where('id', $mailer->id)->update(['server_id' => $serverInfo->id, 'send_status' => 1, 'send_at' => date('Y-m-d H:i:s')]);
                 $successEntries[] = $mailer->id;
             }
         }
@@ -46,11 +60,7 @@ class MailSender
         if(count($successEntries))
         {
             $mailerLog->insert($mailerLogData);
-
-            if(Emailer::whereIn('id', $successEntries)->update(['send_status' => 1, 'send_at' => date('Y-m-d H:i:s')]))
-            {
-                return count($successEntries);
-            }
+            return $successEntries;
         }
 
         return false;
@@ -66,23 +76,42 @@ class MailSender
     {
         if($model)
         {
+            $monthStartDate =  date('Y-m-01- 00:00:00',strtotime('this month'));
+            $monthEndDate   =  date('Y-m-t 12:59:59',strtotime('this month'));
+            $servers        = $model->user->smtp_server;
+            $serverInfo     = false;
+
+            foreach($servers as $server)
+            {
+                $count = Emailer::where('server_id', $server->id)
+                    ->where('created_at','>=', $monthStartDate)
+                    ->where('created_at','<=', $monthEndDate)->count();
+
+                if($count < $server->max_limit)
+                {
+                    $serverInfo = $server;
+
+                    break;
+                }
+            }
+
             $mail = new PHPMailer(true);
 
             try {
                 //Server settings
                 $mail->SMTPDebug = 0;                                 // Enable verbose debug output
                 $mail->isSMTP();                                      // Set mailer to use SMTP
-                $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
+                $mail->Host = $serverInfo->host; // 'smtp.gmail.com';  // Specify main and backup SMTP servers
                 $mail->SMTPAuth = true;                               // Enable SMTP authentication
-                $mail->Username = 'er.anujcygnet@gmail.com';                 // SMTP username
-                $mail->Password = 'Cygnet@321';                           // SMTP password
+                $mail->Username = $serverInfo->username;// 'er.anujcygnet@gmail.com';                 // SMTP username
+                $mail->Password = $serverInfo->password; //'Cygnet@321';                           // SMTP password
                 $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
                 $mail->Port = 587;                                    // TCP port to connect to
 
                 //Recipients
-                $mail->setFrom('er.anujcygnet@gmail.com', 'Admin');
+                $mail->setFrom($serverInfo->set_from, $serverInfo->set_from_name);
                 $mail->addAddress($model->subscriber->email_id, $model->subscriber->name);     // Add a recipient
-                $mail->addReplyTo('er.anujcygnet@gmail.com', 'Information');
+                $mail->addReplyTo($serverInfo->reply_to, $serverInfo->reply_to_name);
                 /*$mail->addCC('cc@example.com');
                 $mail->addBCC('bcc@example.com');*/
 
@@ -97,7 +126,7 @@ class MailSender
                 //$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
                 $mail->send();
-                return true;
+                return $serverInfo;
             } catch (Exception $e) {
                 echo 'Message could not be sent.';
                 echo 'Mailer Error: ' . $mail->ErrorInfo;

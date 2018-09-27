@@ -17,7 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['namespace' => 'Api',], function () 
+Route::group(['namespace' => 'Api',], function ()
 {
     Route::post('login', 'UsersController@login')->name('api.login');
     /*Route::post('register', 'UsersController@register')->name('api.register');
@@ -30,10 +30,18 @@ Route::group(['namespace' => 'Api',], function ()
     Route::post('sendnext', 'PatientsController@sendNextAppoint')->name('api.sendnext');*/
 });
 
-Route::group(['namespace' => 'Api', 'middleware' => 'jwt.customauth'], function () 
+/*Route::group(['namespace' => 'Api', 'middleware' => 'jwt.customauth'], function ()
 {
     Route::get('events', 'APIEventsController@index')->name('events.index');
     Route::post('events/create', 'APIEventsController@create')->name('events.create');
     Route::post('events/edit', 'APIEventsController@edit')->name('events.edit');
     Route::post('events/delete', 'APIEventsController@delete')->name('events.delete');
+});*/
+
+/*
+ * Frontend Routes
+ * Namespaces indicate folder structure
+ */
+Route::group(['middleware' => 'jwt.customauth'], function () {
+    includeRouteFiles(__DIR__.'/API/');
 });

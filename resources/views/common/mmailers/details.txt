@@ -1,0 +1,85 @@
+Tabel Name data_mailers Columns["id","user_id","server_id","subscriber_id","template_id","send_status","read_status","schedule_time","send_at","created_at","updated_at","deleted_at","read_at"] \n \n  Form HTML \n<div class="box-body">
+    <div class="form-group">
+        {{ Form::label('user_id', 'User_id :', ['class' => 'col-lg-2 control-label']) }}
+        <div class="col-lg-10">
+            {{ Form::text('user_id', null, ['class' => 'form-control', 'placeholder' => 'User_id', 'required' => 'required']) }}
+        </div>
+    </div>
+</div><div class="box-body">
+    <div class="form-group">
+        {{ Form::label('server_id', 'Server_id :', ['class' => 'col-lg-2 control-label']) }}
+        <div class="col-lg-10">
+            {{ Form::text('server_id', null, ['class' => 'form-control', 'placeholder' => 'Server_id', 'required' => 'required']) }}
+        </div>
+    </div>
+</div><div class="box-body">
+    <div class="form-group">
+        {{ Form::label('subscriber_id', 'Subscriber_id :', ['class' => 'col-lg-2 control-label']) }}
+        <div class="col-lg-10">
+            {{ Form::text('subscriber_id', null, ['class' => 'form-control', 'placeholder' => 'Subscriber_id', 'required' => 'required']) }}
+        </div>
+    </div>
+</div><div class="box-body">
+    <div class="form-group">
+        {{ Form::label('template_id', 'Template_id :', ['class' => 'col-lg-2 control-label']) }}
+        <div class="col-lg-10">
+            {{ Form::text('template_id', null, ['class' => 'form-control', 'placeholder' => 'Template_id', 'required' => 'required']) }}
+        </div>
+    </div>
+</div><div class="box-body">
+    <div class="form-group">
+        {{ Form::label('send_status', 'Send_status :', ['class' => 'col-lg-2 control-label']) }}
+        <div class="col-lg-10">
+            {{ Form::text('send_status', null, ['class' => 'form-control', 'placeholder' => 'Send_status', 'required' => 'required']) }}
+        </div>
+    </div>
+</div><div class="box-body">
+    <div class="form-group">
+        {{ Form::label('read_status', 'Read_status :', ['class' => 'col-lg-2 control-label']) }}
+        <div class="col-lg-10">
+            {{ Form::text('read_status', null, ['class' => 'form-control', 'placeholder' => 'Read_status', 'required' => 'required']) }}
+        </div>
+    </div>
+</div><div class="box-body">
+    <div class="form-group">
+        {{ Form::label('schedule_time', 'Schedule_time :', ['class' => 'col-lg-2 control-label']) }}
+        <div class="col-lg-10">
+            {{ Form::text('schedule_time', null, ['class' => 'form-control', 'placeholder' => 'Schedule_time', 'required' => 'required']) }}
+        </div>
+    </div>
+</div><div class="box-body">
+    <div class="form-group">
+        {{ Form::label('send_at', 'Send_at :', ['class' => 'col-lg-2 control-label']) }}
+        <div class="col-lg-10">
+            {{ Form::text('send_at', null, ['class' => 'form-control', 'placeholder' => 'Send_at', 'required' => 'required']) }}
+        </div>
+    </div>
+</div><div class="box-body">
+    <div class="form-group">
+        {{ Form::label('created_at', 'Created_at :', ['class' => 'col-lg-2 control-label']) }}
+        <div class="col-lg-10">
+            {{ Form::text('created_at', null, ['class' => 'form-control', 'placeholder' => 'Created_at', 'required' => 'required']) }}
+        </div>
+    </div>
+</div><div class="box-body">
+    <div class="form-group">
+        {{ Form::label('updated_at', 'Updated_at :', ['class' => 'col-lg-2 control-label']) }}
+        <div class="col-lg-10">
+            {{ Form::text('updated_at', null, ['class' => 'form-control', 'placeholder' => 'Updated_at', 'required' => 'required']) }}
+        </div>
+    </div>
+</div><div class="box-body">
+    <div class="form-group">
+        {{ Form::label('deleted_at', 'Deleted_at :', ['class' => 'col-lg-2 control-label']) }}
+        <div class="col-lg-10">
+            {{ Form::text('deleted_at', null, ['class' => 'form-control', 'placeholder' => 'Deleted_at', 'required' => 'required']) }}
+        </div>
+    </div>
+</div><div class="box-body">
+    <div class="form-group">
+        {{ Form::label('read_at', 'Read_at :', ['class' => 'col-lg-2 control-label']) }}
+        <div class="col-lg-10">
+            {{ Form::text('read_at', null, ['class' => 'form-control', 'placeholder' => 'Read_at', 'required' => 'required']) }}
+        </div>
+    </div>
+</div>

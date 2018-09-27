@@ -5,6 +5,7 @@ namespace App\Models\Access\User\Traits\Relationship;
 use App\Models\Event\Event;
 use App\Models\System\Session;
 use App\Models\Access\User\SocialLogin;
+use App\Models\ServerConfig\ServerConfig;
 
 /**
  * Class UserRelationship.
@@ -43,5 +44,13 @@ trait UserRelationship
     public function events()
     {
         return $this->hasMany(Event::class);
-    }    
+    }
+
+    /**
+     * @return mixed
+     */
+    public function smtp_server()
+    {
+        return $this->hasMany(ServerConfig::class);
+    }
 }

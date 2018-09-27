@@ -8,6 +8,10 @@
 // Switch between the included languages
 Route::get('lang/{lang}', 'LanguageController@swap');
 
+
+// Read Email status
+Route::get('email-read/{id}', 'GeneralController@readEmail');
+
 /* ----------------------------------------------------------------------- */
 
 /*

@@ -48,10 +48,18 @@
     </div>
 
     <div class="form-group">
+        {{ Form::label('image', 'IMage :', ['class' => 'col-lg-2 control-label']) }}
+
+        <div class="col-lg-10">
+            {{ Form::file('image',  ['class' => 'form-control', 'cols' => 40, 'rows' => 4]) }}
+        </div>
+    </div>
+
+    <div class="form-group">
         {{ Form::label('name', 'Subscriber Category:', ['class' => 'col-lg-2 control-label']) }}
 
         <div class="col-lg-10">
         	{!! Form::select('category_id',  [0 => 'Select Category'] + $repository->getSubscriberCategories() , null, array('class' => 'form-control filter-type-select2', 'id' => 'category_id', 'required' => 'required')) !!}
         </div>
-    </div> 
+    </div>
 </div>
