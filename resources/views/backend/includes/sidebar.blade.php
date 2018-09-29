@@ -78,8 +78,8 @@
                 </a>
             </li>
 
-            <li class="{{ active_class(Active::checkUriPattern('admin/subscriber/upload')) }}">
-                <a href="{{ route('admin.subscriber.index') }}">
+            <li class="{{ active_class(Active::checkUriPattern('admin/subscriber/bulk-upload')) }}">
+                <a href="{{ route('admin.subscriber.bulk-upload') }}">
                     <i class="fa fa-users"></i>
                     <span>Bulk Upload</span>
                 </a>
