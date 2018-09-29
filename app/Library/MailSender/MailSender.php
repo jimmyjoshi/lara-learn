@@ -30,7 +30,12 @@ class MailSender
 
         $successEntries = [];
 
-        $mailers = $mailer->with(['subscriber', 'template'])->where(['send_status' => 0 ])->limit($this->limit)->get();
+        $mailers = $mailer->with(['subscriber', 'template'])->where(['send_status' => 0 ])
+        ->whereHas('subscriber', function($q)
+        {
+            $q->where('email_id', '!=', null);
+        })
+        ->limit($this->limit)->get();
 
         foreach($mailers as $mailer)
         {
