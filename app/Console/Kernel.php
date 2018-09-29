@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function()
         {
-            $sender = new MailSender(40);
+            $sender = new MailSender(100);
             $sender->sendAllEmails();
         })->everyMinute();
         // $schedule->command('inspire')
