@@ -9,6 +9,7 @@
 Route::get('lang/{lang}', 'LanguageController@swap');
 
 
+
 // Read Email status
 Route::get('email-read/{id}', 'GeneralController@readEmail');
 
@@ -20,6 +21,9 @@ Route::get('email-read/{id}', 'GeneralController@readEmail');
  */
 Route::group(['namespace' => 'Frontend', 'as' => 'frontend.'], function () {
     includeRouteFiles(__DIR__.'/Frontend/');
+
+
+    Route::any('editor/upload-image', 'FrontendController@uploadImage')->name('upload-image');
 });
 
 /* ----------------------------------------------------------------------- */

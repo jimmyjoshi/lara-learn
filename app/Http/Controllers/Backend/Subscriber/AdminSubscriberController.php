@@ -90,6 +90,16 @@ class AdminSubscriberController extends Controller
         ]);
     }
 
+    /**
+     * Subscriber View
+     *
+     * @return \Illuminate\View\View
+     */
+    public function uploadImage(Request $request)
+    {
+        dd($request->all());
+    }
+
     public function uploadStore(Request $request)
     {
         if ($request->hasFile('csv'))

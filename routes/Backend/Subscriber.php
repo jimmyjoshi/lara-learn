@@ -15,6 +15,9 @@ Route::group([
     Route::get('subscriber/upload', 'AdminSubscriberController@upload')->name('
         subscriber.upload');
 
+
+    
+
     Route::post('subscriber/upload/store', 'AdminSubscriberController@uploadStore')->name('subscriber.upload-store');
 
 
