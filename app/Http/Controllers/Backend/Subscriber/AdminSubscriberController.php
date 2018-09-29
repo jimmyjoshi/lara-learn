@@ -97,7 +97,7 @@ class AdminSubscriberController extends Controller
      */
     public function uploadImage(Request $request)
     {
-        dd($request->all());
+        dd($request->all());        
     }
 
     public function uploadStore(Request $request)
@@ -140,9 +140,11 @@ class AdminSubscriberController extends Controller
                     {
                         $newUsers[] = [
                             'user_id'       => 1,
-                            'name'          => $tempUser[0],
-                            'email_id'      => $tempUser[1],
-                            'category_id'   => $tempUser[2],
+                            'category_id'   => $tempUser[0],
+                            'company_name'  => $tempUser[1],
+                            'name'          => $tempUser[2],
+                            'mobile'        => $tempUser[3],
+                            'email_id'      => $tempUser[4]
                         ];
                     }
                 }
