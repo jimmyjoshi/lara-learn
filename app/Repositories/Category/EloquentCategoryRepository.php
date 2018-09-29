@@ -27,6 +27,7 @@ class EloquentCategoryRepository extends DbRepository
 	 * @var array
 	 */
 	public $tableHeaders = [
+		'id' 			=> '#',
 		'name' 			=> 'Category Name',
 		'username' 		=> 'Creator',
 		'actions' 		=> 'Actions'
@@ -38,6 +39,12 @@ class EloquentCategoryRepository extends DbRepository
 	 * @var array
 	 */
 	public $tableColumns = [
+		'id' =>	[
+			'data' 			=> 'id',
+			'name' 			=> 'id',
+			'searchable' 	=> true, 
+			'sortable'		=> true
+		],
 		'name' =>	[
 			'data' 			=> 'name',
 			'name' 			=> 'name',

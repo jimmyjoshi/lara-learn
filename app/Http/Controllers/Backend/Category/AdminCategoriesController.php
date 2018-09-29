@@ -143,6 +143,7 @@ class AdminCategoriesController extends Controller
     public function getTableData()
     {
        return Datatables::of($this->repository->getForDataTable())
+            ->escapeColumns(['id', 'sort'])
             ->escapeColumns(['name', 'sort'])
             ->escapeColumns(['username', 'sort'])
             ->escapeColumns(['name', 'sort'])
