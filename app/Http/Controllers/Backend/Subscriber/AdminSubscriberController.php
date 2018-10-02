@@ -61,8 +61,6 @@ class AdminSubscriberController extends Controller
      */
     public function index()
     {
-
-        die('test');
         return view($this->repository->setAdmin(true)->getModuleView('listView'))->with([
             'repository' => $this->repository
         ]);
