@@ -130,7 +130,21 @@
             <li>
                 <a href="javascript:void(0);">
                     <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                    <span>Today Reads ({!! access()->todayReadCount() !!})</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:void(0);">
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
                     <span>Total Mails ({!! access()->totalMailCount() !!})</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:void(0);">
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                    <span>Total Reads ({!! access()->totalReadCount() !!})</span>
                 </a>
             </li>
 

@@ -185,4 +185,26 @@ class Access
 
         return $body . $readSignature;
     }
+
+    /**
+     * Total Read Count
+     *
+     * @param object $model
+     * @param string $body
+     */
+    public function totalReadCount()
+    {
+        return MailerLog::whereNotNull('read_at')->count();
+    }
+
+    /**
+     * Total Read Count
+     *
+     * @param object $model
+     * @param string $body
+     */
+    public function todayReadCount()
+    {
+        return MailerLog::whereDate('read_at', date('Y-m-d H:i:s'))->count();
+    }
 }
