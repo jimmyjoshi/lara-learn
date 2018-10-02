@@ -15,7 +15,7 @@ class AddMailerIdToMailerLogTable extends Migration
     {
         Schema::table('data_mailers_log', function (Blueprint $table)
         {
-            $table->datetime('mailer_id')->after('subscriber_id')->nullable();
+            $table->Integer('mailer_id')->after('subscriber_id')->nullable();
         });
     }
 

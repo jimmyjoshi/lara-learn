@@ -53,6 +53,7 @@ class MailSender
 
                 $mailerLogData[] = [
                     'subscriber_id' => $mailer->subscriber_id,
+                    'mailer_id'     => $mailer->id,
                     'subject'       => $mailer->template->subject,
                     'body'          => $mailer->template->body . $viewEmail,
                 ];

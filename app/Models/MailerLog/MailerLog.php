@@ -24,7 +24,7 @@ class MailerLog extends BaseModel
      *
      */
     protected $fillable = [
-        "id", "subscriber_id", "subject", "body", "read_at", "created_at", "updated_at",
+        "id", "mailer_id", "subscriber_id", "subject", "body", "read_at", "created_at", "updated_at",
     ];
 
     /**
