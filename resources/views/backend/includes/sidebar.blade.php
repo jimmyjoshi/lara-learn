@@ -106,10 +106,31 @@
                 </a>
             </li>
 
+            <li class="{{ active_class(Active::checkUriPattern('admin/mailerlog')) }}">
+                <a href="{{ route('admin.mailerlog.index') }}">
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                    <span>Mail Logs</span>
+                </a>
+            </li>
+
             <li class="{{ active_class(Active::checkUriPattern('admin/sms')) }}">
                 <a href="{{ route('admin.sms.index') }}">
                     <i class="fa fa-envelope-o" aria-hidden="true"></i>
                     <span>SMS</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:void(0);">
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                    <span>Today Mails ({!! access()->todayMailCount() !!})</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:void(0);">
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                    <span>Total Mails ({!! access()->totalMailCount() !!})</span>
                 </a>
             </li>
 

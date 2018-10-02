@@ -61,6 +61,8 @@ class AdminSubscriberController extends Controller
      */
     public function index()
     {
+
+        die('test');
         return view($this->repository->setAdmin(true)->getModuleView('listView'))->with([
             'repository' => $this->repository
         ]);
@@ -97,7 +99,7 @@ class AdminSubscriberController extends Controller
      */
     public function uploadImage(Request $request)
     {
-        dd($request->all());        
+        dd($request->all());
     }
 
     public function uploadStore(Request $request)

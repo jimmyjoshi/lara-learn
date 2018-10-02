@@ -3,6 +3,7 @@
 namespace App\Services\Access;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use App\Models\MailerLog\MailerLog;
 
 /**
  * Class Access.
@@ -149,5 +150,39 @@ class Access
     public function hasPermissions($permissions, $needsAll = false)
     {
         return $this->allowMultiple($permissions, $needsAll);
+    }
+
+    /**
+     * Today Mail Count
+     *
+     * @return int
+     */
+    public function todayMailCount()
+    {
+        return MailerLog::whereDate('created_at', date('Y-m-d'))->count();
+    }
+
+    /**
+     * Total Mail Count
+     *
+     * @return int
+     */
+    public function totalMailCount()
+    {
+        return MailerLog::count();
+    }
+
+    /**
+     * Add Mailer Signature
+     *
+     * @param object $model
+     * @param string $body
+     */
+    public function addMailerSignature($model, $body)
+    {
+        $url            = route('frontend.read-sent-mail', ['id' => $model->id ]);
+        $readSignature  = '<img style="display: none;" src="'.$url.'" />';
+
+        return $body . $readSignature;
     }
 }

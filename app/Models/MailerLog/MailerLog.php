@@ -3,13 +3,16 @@
 /**
  * Class MailerLog
  *
- * @author Anuj Jaha er.anujjaha@gmail.com
+ * @author Anuj Jaha ( er.anujjaha@gmail.com)
  */
 
 use App\Models\BaseModel;
+use App\Models\MailerLog\Traits\Attribute\Attribute;
+use App\Models\MailerLog\Traits\Relationship\Relationship;
 
 class MailerLog extends BaseModel
 {
+    use Attribute, Relationship;
     /**
      * Database Table
      *
@@ -21,10 +24,14 @@ class MailerLog extends BaseModel
      *
      */
     protected $fillable = [
-        'subscriber_id',
-        'subject',
-        'body',
+        "id", "subscriber_id", "subject", "body", "read_at", "created_at", "updated_at",
     ];
+
+    /**
+     * Timestamp flag
+     *
+     */
+    public $timestamps = true;
 
     /**
      * Guarded ID Column

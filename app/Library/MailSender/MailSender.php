@@ -104,21 +104,19 @@ class MailSender
 
             try {
                 //Server settings
-                $mail->SMTPDebug = 0;                                 // Enable verbose debug output
-                $mail->isSMTP();                                      // Set mailer to use SMTP
-                $mail->Host = $serverInfo->host; // 'smtp.gmail.com';  // Specify main and backup SMTP servers
-                $mail->SMTPAuth = true;                               // Enable SMTP authentication
-                $mail->Username = $serverInfo->username;// 'er.anujcygnet@gmail.com';                 // SMTP username
-                $mail->Password = $serverInfo->password; //'Cygnet@321';                           // SMTP password
-                $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-                $mail->Port = 587;                                    // TCP port to connect to
+                $mail->SMTPDebug = 0; // Enable verbose debug output
+                $mail->isSMTP();      // Set mailer to use SMTP
+                $mail->Host = $serverInfo->host;   // Specify main and backup SMTP servers
+                $mail->SMTPAuth = true;          // Enable SMTP authentication
+                $mail->Username = $serverInfo->username;   // SMTP username
+                $mail->Password = $serverInfo->password;    // SMTP password
+                $mail->SMTPSecure = 'tls'; // Enable TLS encryption, `ssl` also accepted
+                $mail->Port = 587;         // TCP port to connect to
 
                 //Recipients
                 $mail->setFrom($serverInfo->set_from, $serverInfo->set_from_name);
                 $mail->addAddress($model->subscriber->email_id, $model->subscriber->name);     // Add a recipient
                 $mail->addReplyTo($serverInfo->reply_to, $serverInfo->reply_to_name);
-                /*$mail->addCC('cc@example.com');
-                $mail->addBCC('bcc@example.com');*/
 
                 //Attachments
                 /*$mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
@@ -127,7 +125,8 @@ class MailSender
                 //Content
                 $mail->isHTML(true);                                  // Set email format to HTML
                 $mail->Subject = $model->template->subject;
-                $mail->Body    = $model->template->body;
+                $body          = access()->addMailerSignature($model, $model->template->body);
+                $mail->Body    = $body;
                 //$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
                 $mail->send();

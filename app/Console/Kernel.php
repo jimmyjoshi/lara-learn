@@ -30,8 +30,6 @@ class Kernel extends ConsoleKernel
             $sender = new MailSender(100);
             $sender->sendAllEmails();
         })->everyMinute();
-        // $schedule->command('inspire')
-        //          ->hourly();
     }
 
     /**

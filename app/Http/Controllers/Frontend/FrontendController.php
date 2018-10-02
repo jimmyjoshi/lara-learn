@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\Subscriber\EloquentSubscriberRepository;
+use App\Models\MailerLog\MailerLog;
 use Illuminate\Http\Request;
 
 /**
@@ -28,7 +29,20 @@ class FrontendController extends Controller
         return view('frontend.macros');
     }
 
-    public function uploadImage(Request $request) 
+    /**
+     * Read Sent Mail
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function readSentMail($id = null)
+    {
+        return MailerLog::where('mailer_id', $id)->update([
+            'read_at' => date('Y-m-d H:i:s')
+        ]);
+    }
+
+    public function uploadImage(Request $request)
     {
         if($request->file('image'))
         {
