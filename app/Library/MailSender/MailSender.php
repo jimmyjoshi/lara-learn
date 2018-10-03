@@ -141,8 +141,11 @@ class MailSender
                 $body          = access()->addMailerSignature($model, $model->template->body);
                 $mail->Body    = $body;
 
-                $mail->send();
-                return $serverInfo;
+                if($mail->send())
+                {
+                    return $serverInfo;
+                }
+                return false;
             } catch (Exception $e)
             {
                 return false;
