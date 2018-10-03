@@ -5,6 +5,8 @@ use App\Models\Subscriber\Subscriber;
 use App\Models\Access\User\User;
 use App\Repositories\DbRepository;
 use App\Exceptions\GeneralException;
+use App\Models\Emailer\Emailer;
+use DB;
 
 class EloquentSubscriberRepository extends DbRepository
 {
@@ -32,8 +34,12 @@ class EloquentSubscriberRepository extends DbRepository
 		'company_name' 	=> 'Comapny Name',
 		'categoryname' 	=> 'Category',
 		'mobile' 		=> 'Mobile',
-		'email_id' 		=> 'Email Id',
-		'username' 		=> 'Created By',
+        'email_id'      => 'Email Id',
+        'total_mail_send'      => 'Total Sent',
+        'total_success_send'      => 'Success',
+        'total_fail_send'       => 'Failure',
+        'total_read'      => 'Total Read',
+        'username' 		=> 'Created By',
 		'actions' 		=> 'Actions'
 	];
 
@@ -73,6 +79,30 @@ class EloquentSubscriberRepository extends DbRepository
 			'searchable' 	=> true,
 			'sortable'		=> true
 		],
+        'total_mail_send' =>   [
+            'data'          => 'total_mail_send',
+            'name'          => 'total_mail_send',
+            'searchable'    => false,
+            'sortable'      => false
+        ],
+        'total_success_send' =>   [
+            'data'          => 'total_success_send',
+            'name'          => 'total_success_send',
+            'searchable'    => false,
+            'sortable'      => false
+        ],
+        'total_fail_send' =>   [
+            'data'          => 'total_fail_send',
+            'name'          => 'total_fail_send',
+            'searchable'    => false,
+            'sortable'      => false
+        ],
+        'total_read' =>   [
+            'data'          => 'total_read',
+            'name'          => 'total_read',
+            'searchable'    => false,
+            'sortable'      => false
+        ],
 		'username' => [
 			'data' 			=> 'username',
 			'name' 			=> 'username',
@@ -158,7 +188,8 @@ class EloquentSubscriberRepository extends DbRepository
 	public function __construct()
 	{
 		$this->model 			= new Subscriber;
-		$this->userModel 		= new User;
+        $this->userModel        = new User;
+		$this->emailerModel     = new Emailer;
 		$this->categoryModel 	= new Category;
 	}
 
@@ -263,7 +294,8 @@ class EloquentSubscriberRepository extends DbRepository
 			$this->model->getTable().'.mobile',
 			$this->model->getTable().'.email_id',
 			$this->categoryModel->getTable().'.name as categoryname',
-			$this->userModel->getTable().'.name as username'
+			$this->userModel->getTable().'.name as username',
+
 		];
     }
 
@@ -272,10 +304,18 @@ class EloquentSubscriberRepository extends DbRepository
      */
     public function getForDataTable()
     {
-    	return  $this->model->select($this->getTableFields())
+        return $this->model->select('data_subscribers.*',
+            'data_categories.name as categoryname',
+            'users.name as username',
+            DB::raw("(SELECT COUNT(id) from data_mailers where data_mailers.subscriber_id = data_subscribers.id ) as total_mail_send"),
+            DB::raw("(SELECT COUNT(id) from data_mailers where send_status = 1 AND data_mailers.subscriber_id = data_subscribers.id ) as total_success_send"),
+            DB::raw("(SELECT COUNT(id) from data_mailers where is_fail = 1 AND data_mailers.subscriber_id = data_subscribers.id ) as total_fail_send"),
+            DB::raw("(SELECT COUNT(id) from data_mailers_log where is_read = 1 AND data_mailers_log.subscriber_id = data_subscribers.id ) as total_read")
+            )
     			->leftjoin($this->userModel->getTable(), $this->userModel->getTable().'.id', '=', $this->model->getTable().'.user_id')
     			->leftjoin($this->categoryModel->getTable(), $this->categoryModel->getTable().'.id', '=', $this->model->getTable().'.category_id')
     			->get();
+
 
     }
 

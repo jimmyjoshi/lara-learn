@@ -262,6 +262,9 @@ class AdminSubscriberController extends Controller
             ->escapeColumns(['categoryname', 'sort'])
             ->escapeColumns(['mobile', 'sort'])
             ->escapeColumns(['email_id', 'sort'])
+            ->escapeColumns(['total_mail_send'])
+            ->escapeColumns(['total_success_send'])
+            ->escapeColumns(['total_fail_send'])
             ->escapeColumns(['username', 'sort'])
             ->addColumn('actions', function ($model) {
                 return $model->admin_action_buttons;

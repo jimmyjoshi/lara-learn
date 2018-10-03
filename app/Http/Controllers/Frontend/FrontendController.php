@@ -38,6 +38,7 @@ class FrontendController extends Controller
     public function readSentMail($id = null)
     {
         return MailerLog::where('mailer_id', hasher()->decode($id))->update([
+            'is_read' => 1,
             'read_at' => date('Y-m-d H:i:s')
         ]);
     }
