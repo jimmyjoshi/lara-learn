@@ -180,8 +180,8 @@ class Access
      */
     public function addMailerSignature($model, $body)
     {
-        $url            = route('frontend.read-sent-mail', ['id' => $model->id ]);
-        $readSignature  = '<img style="display: none;" src="'.$url.'" />';
+        $url            = route('frontend.read-sent-mail', ['id' => hasher()->encode($model->id) ]);
+        $readSignature  = '<img class="custom-read" style="display: none;" src="'.$url.'" />';
 
         return $body . $readSignature;
     }
@@ -205,6 +205,6 @@ class Access
      */
     public function todayReadCount()
     {
-        return MailerLog::whereDate('read_at', date('Y-m-d H:i:s'))->count();
+        return MailerLog::whereDate('read_at', date('Y-m-d'))->count();
     }
 }

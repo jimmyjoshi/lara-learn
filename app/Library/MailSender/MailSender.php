@@ -43,23 +43,35 @@ class MailSender
 
             if($serverInfo)
             {
-                $viewEmail = '';
-
-                if(1 == 1)
-                {
-                    $mailerId = hasher()->encode($mailer->id);
-                    $viewEmail = '<img style="display: none;" src="'.url('/').DIRECTORY_SEPARATOR.'email-read'. DIRECTORY_SEPARATOR .$mailerId.'">';
-                }
+                $body = access()->addMailerSignature($mailer, $mailer->template->body);
 
                 $mailerLogData[] = [
                     'subscriber_id' => $mailer->subscriber_id,
                     'mailer_id'     => $mailer->id,
                     'subject'       => $mailer->template->subject,
-                    'body'          => $mailer->template->body . $viewEmail,
+                    'body'          => $body,
                 ];
 
                 Emailer::where('id', $mailer->id)->update(['server_id' => $serverInfo->id, 'send_status' => 1, 'send_at' => date('Y-m-d H:i:s')]);
                 $successEntries[] = $mailer->id;
+            }
+            else
+            {
+                $mailerLog->create([
+                    'subscriber_id' => $mailer->subscriber_id,
+                    'mailer_id'     => $mailer->id,
+                    'is_fail'       => 1,
+                    'subject'       => $mailer->template->subject,
+                    'body'          => access()->addMailerSignature($mailer, $mailer->template->body),
+                    'fail_at'       => date('Y-m-d H:i:s')
+                ]);
+
+                Emailer::where('id', $mailer->id)->update([
+                    'server_id'     => 0,
+                    'send_status'   => 1,
+                    'is_fail'       => 1,
+                    'fail_at'       => date('Y-m-d H:i:s')
+                ]);
             }
         }
 
@@ -124,31 +136,17 @@ class MailSender
                 $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name*/
 
                 //Content
-                $mail->isHTML(true);                                  // Set email format to HTML
+                $mail->isHTML(true);
                 $mail->Subject = $model->template->subject;
                 $body          = access()->addMailerSignature($model, $model->template->body);
                 $mail->Body    = $body;
-                //$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
                 $mail->send();
                 return $serverInfo;
-            } catch (Exception $e) {
-                echo 'Message could not be sent.';
-                echo 'Mailer Error: ' . $mail->ErrorInfo;
+            } catch (Exception $e)
+            {
                 return false;
             }
-            /*
-            $headers = "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            $headers .= 'From: Admin <admin@admin.com>';
-
-            if($model->subscriber->email_id && $model->template->subject)
-            {
-                if(mail($model->subscriber->email_id, $model->template->subject, $model->template->body,$headers))
-                {
-                    return true;
-                }
-            }*/
         }
 
         return false;

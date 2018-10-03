@@ -146,7 +146,7 @@ class AdminMailerLogController extends Controller
     public function getTableData()
     {
         return Datatables::of($this->repository->getForDataTable())
-            ->escapeColumns(['id', 'sort'])
+            ->escapeColumns(['id'])
             ->addColumn('actions', function ($item) {
                 return $item->admin_action_buttons;
             })

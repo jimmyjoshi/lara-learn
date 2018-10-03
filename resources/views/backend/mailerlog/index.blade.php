@@ -60,7 +60,7 @@
         jQuery(document).ready(function()
         {
             BaseCommon.Utils.setTableHeaders(document.getElementById("tableHeadersContainer"), headers);
-            BaseCommon.Utils.setTableColumns(document.getElementById("items-table"), moduleConfig.getTableDataUrl, 'GET', columns);
+            BaseCommon.Utils.setTableColumns(document.getElementById("items-table"), moduleConfig.getTableDataUrl, 'GET', columns, 'desc');
     	});
     </script>
 @endsection

@@ -216,8 +216,12 @@ var BaseCommon =
 			element.innerHTML  = tableHeader;
 		},
 
-		setTableColumns: function(element, fetchurl, method, columns)
+		setTableColumns: function(element, fetchurl, method, columns, order)
 		{
+			var order = order ? order : 'asc';
+
+			console.log(order);
+
 			jQuery(element).DataTable({
 			    processing: true,
 			    serverSide: true,
@@ -227,7 +231,7 @@ var BaseCommon =
 			        type: method
 			    },
 			    columns: columns,
-			    order: [[0, "asc"]],
+			    order: [[0, order]],
 			    searchDelay: 800,
 			    buttons: [
 			        {
