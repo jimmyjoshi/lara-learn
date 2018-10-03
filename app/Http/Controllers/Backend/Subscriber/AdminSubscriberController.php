@@ -257,6 +257,9 @@ class AdminSubscriberController extends Controller
     public function getTableData()
     {
         return Datatables::of($this->repository->getForDataTable())
+            ->with([
+               "recordsTotal" => access()->getSubscriberCount()
+            ])
 		    ->escapeColumns(['name', 'sort'])
             ->escapeColumns(['company_name', 'sort'])
             ->escapeColumns(['categoryname', 'sort'])

@@ -220,8 +220,6 @@ var BaseCommon =
 		{
 			var order = order ? order : 'asc';
 
-			console.log(order);
-
 			jQuery(element).DataTable({
 			    processing: true,
 			    serverSide: true,

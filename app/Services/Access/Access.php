@@ -4,6 +4,7 @@ namespace App\Services\Access;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use App\Models\MailerLog\MailerLog;
+use App\Models\Subscriber\Subscriber;
 
 /**
  * Class Access.
@@ -206,5 +207,15 @@ class Access
     public function todayReadCount()
     {
         return MailerLog::whereDate('read_at', date('Y-m-d'))->count();
+    }
+
+    /**
+     * Get Subscriber Count
+     *
+     * @return int
+     */
+    public function getSubscriberCount()
+    {
+        return Subscriber::count();
     }
 }
