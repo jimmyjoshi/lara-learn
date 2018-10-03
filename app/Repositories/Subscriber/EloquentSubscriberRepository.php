@@ -314,9 +314,9 @@ class EloquentSubscriberRepository extends DbRepository
             )
     			->leftjoin($this->userModel->getTable(), $this->userModel->getTable().'.id', '=', $this->model->getTable().'.user_id')
     			->leftjoin($this->categoryModel->getTable(), $this->categoryModel->getTable().'.id', '=', $this->model->getTable().'.category_id')
+                ->leftjoin('data_mailers', 'data_mailers.subscriber_id', '=', 'data_subscribers.id')
+                ->leftjoin('data_mailers_log', 'data_mailers_log.subscriber_id', '=', 'data_subscribers.id')
     			->get();
-
-
     }
 
     /**
