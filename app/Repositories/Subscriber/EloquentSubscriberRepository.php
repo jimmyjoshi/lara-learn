@@ -36,9 +36,9 @@ class EloquentSubscriberRepository extends DbRepository
 		'mobile' 		=> 'Mobile',
         'email_id'      => 'Email Id',
         'total_mail_send'      => 'Total Sent',
-        'total_success_send'      => 'Success',
+        /*'total_success_send'      => 'Success',
         'total_fail_send'       => 'Failure',
-        'total_read'      => 'Total Read',
+        'total_read'      => 'Total Read',*/
         'username' 		=> 'Created By',
 		'actions' 		=> 'Actions'
 	];
@@ -85,7 +85,7 @@ class EloquentSubscriberRepository extends DbRepository
             'searchable'    => false,
             'sortable'      => false
         ],
-        'total_success_send' =>   [
+       /* 'total_success_send' =>   [
             'data'          => 'total_success_send',
             'name'          => 'total_success_send',
             'searchable'    => false,
@@ -102,7 +102,7 @@ class EloquentSubscriberRepository extends DbRepository
             'name'          => 'total_read',
             'searchable'    => false,
             'sortable'      => false
-        ],
+        ],*/
 		'username' => [
 			'data' 			=> 'username',
 			'name' 			=> 'username',
@@ -307,15 +307,13 @@ class EloquentSubscriberRepository extends DbRepository
         return $this->model->select('data_subscribers.*',
             'data_categories.name as categoryname',
             'users.name as username',
-                DB::raw("(SELECT COUNT(id) from data_mailers where data_mailers.subscriber_id = data_subscribers.id ) as total_mail_send"),
-                DB::raw("(SELECT COUNT(id) from data_mailers where send_status = 1 AND data_mailers.subscriber_id = data_subscribers.id ) as total_success_send"),
+                DB::raw("(SELECT COUNT(id) from data_mailers where data_mailers.subscriber_id = data_subscribers.id ) as total_mail_send")
+                /*DB::raw("(SELECT COUNT(id) from data_mailers where send_status = 1 AND data_mailers.subscriber_id = data_subscribers.id ) as total_success_send"),
                 DB::raw("(SELECT COUNT(id) from data_mailers where is_fail = 1 AND data_mailers.subscriber_id = data_subscribers.id ) as total_fail_send"),
-                DB::raw("(SELECT COUNT(id) from data_mailers_log where is_read = 1 AND data_mailers_log.subscriber_id = data_subscribers.id ) as total_read")
+                DB::raw("(SELECT COUNT(id) from data_mailers_log where is_read = 1 AND data_mailers_log.subscriber_id = data_subscribers.id ) as total_read")*/
             )
 			->leftjoin($this->userModel->getTable(), $this->userModel->getTable().'.id', '=', $this->model->getTable().'.user_id')
 			->leftjoin($this->categoryModel->getTable(), $this->categoryModel->getTable().'.id', '=', $this->model->getTable().'.category_id')
-            ->skip(0)
-            ->take(10)
             ->get();
     }
 

@@ -258,16 +258,17 @@ class AdminSubscriberController extends Controller
     {
         return Datatables::of($this->repository->getForDataTable())
             ->with([
-               "recordsTotal" => access()->getSubscriberCount()
-            ])
+               "recordsTotal"       => access()->getSubscriberCount(),
+               "recordsFiltered"    => access()->getSubscriberCount()
+             ])
 		    ->escapeColumns(['name', 'sort'])
             ->escapeColumns(['company_name', 'sort'])
             ->escapeColumns(['categoryname', 'sort'])
             ->escapeColumns(['mobile', 'sort'])
             ->escapeColumns(['email_id', 'sort'])
             ->escapeColumns(['total_mail_send'])
-            ->escapeColumns(['total_success_send'])
-            ->escapeColumns(['total_fail_send'])
+            /*->escapeColumns(['total_success_send'])
+            ->escapeColumns(['total_fail_send'])*/
             ->escapeColumns(['username', 'sort'])
             ->addColumn('actions', function ($model) {
                 return $model->admin_action_buttons;
