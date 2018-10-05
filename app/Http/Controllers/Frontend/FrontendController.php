@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Subscriber\EloquentSubscriberRepository;
 use App\Models\MailerLog\MailerLog;
 use Illuminate\Http\Request;
+use App\Models\Emailer\Emailer;
+use App\Models\Subscriber\Subscriber;
 
 /**
  * Class FrontendController.
@@ -37,6 +39,10 @@ class FrontendController extends Controller
      */
     public function readSentMail($id = null)
     {
+        $subscriberId = Emailer::pluck('subscriber_id')->first();
+
+        Subscriber::where('id', $subscriberId)->increment('total_Read', 1);
+
         return MailerLog::where('mailer_id', hasher()->decode($id))->update([
             'is_read' => 1,
             'read_at' => date('Y-m-d H:i:s')

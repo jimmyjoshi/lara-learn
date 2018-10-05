@@ -35,10 +35,9 @@ class EloquentSubscriberRepository extends DbRepository
 		'categoryname' 	=> 'Category',
 		'mobile' 		=> 'Mobile',
         'email_id'      => 'Email Id',
-        'total_mail_send'      => 'Total Sent',
-        /*'total_success_send'      => 'Success',
-        'total_fail_send'       => 'Failure',
-        'total_read'      => 'Total Read',*/
+        'total_mails'   => 'Total Sent',
+        'total_fail'    => 'Total Fail',
+        'total_read'    => 'Total Read',
         'username' 		=> 'Created By',
 		'actions' 		=> 'Actions'
 	];
@@ -79,30 +78,24 @@ class EloquentSubscriberRepository extends DbRepository
 			'searchable' 	=> true,
 			'sortable'		=> true
 		],
-        'total_mail_send' =>   [
-            'data'          => 'total_mail_send',
-            'name'          => 'total_mail_send',
-            'searchable'    => false,
-            'sortable'      => false
+        'total_mails' =>   [
+            'data'          => 'total_mails',
+            'name'          => 'total_mails',
+            'searchable'    => true,
+            'sortable'      => true
         ],
-       /* 'total_success_send' =>   [
-            'data'          => 'total_success_send',
-            'name'          => 'total_success_send',
-            'searchable'    => false,
-            'sortable'      => false
-        ],
-        'total_fail_send' =>   [
-            'data'          => 'total_fail_send',
-            'name'          => 'total_fail_send',
-            'searchable'    => false,
-            'sortable'      => false
+        'total_fail' =>   [
+            'data'          => 'total_fail',
+            'name'          => 'total_fail',
+            'searchable'    => true,
+            'sortable'      => true
         ],
         'total_read' =>   [
             'data'          => 'total_read',
             'name'          => 'total_read',
-            'searchable'    => false,
-            'sortable'      => false
-        ],*/
+            'searchable'    => true,
+            'sortable'      => true
+        ],
 		'username' => [
 			'data' 			=> 'username',
 			'name' 			=> 'username',
@@ -306,8 +299,8 @@ class EloquentSubscriberRepository extends DbRepository
     {
         return $this->model->select('data_subscribers.*',
             'data_categories.name as categoryname',
-            'users.name as username',
-                DB::raw("(SELECT COUNT(id) from data_mailers where data_mailers.subscriber_id = data_subscribers.id ) as total_mail_send")
+            'users.name as username'
+                /*DB::raw("(SELECT COUNT(id) from data_mailers where data_mailers.subscriber_id = data_subscribers.id ) as total_mail_send")*/
                 /*DB::raw("(SELECT COUNT(id) from data_mailers where send_status = 1 AND data_mailers.subscriber_id = data_subscribers.id ) as total_success_send"),
                 DB::raw("(SELECT COUNT(id) from data_mailers where is_fail = 1 AND data_mailers.subscriber_id = data_subscribers.id ) as total_fail_send"),
                 DB::raw("(SELECT COUNT(id) from data_mailers_log where is_read = 1 AND data_mailers_log.subscriber_id = data_subscribers.id ) as total_read")*/

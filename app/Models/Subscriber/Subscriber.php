@@ -26,6 +26,10 @@ class Subscriber extends BaseModel
     protected $fillable = [
         'user_id',
         'category_id',
+        'total_mails',
+        'total_success',
+        'total_fail',
+        'total_read',
         'name',
         'company_name',
         'mobile',

@@ -5,6 +5,8 @@ use App\Models\MailerLog\MailerLog;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use App\Models\ServerConfig\ServerConfig;
+use App\Models\Subscriber\Subscriber;
+use DB;
 
 /**
  * Class MailSender
@@ -54,6 +56,11 @@ class MailSender
 
                 Emailer::where('id', $mailer->id)->update(['server_id' => $serverInfo->id, 'send_status' => 1, 'send_at' => date('Y-m-d H:i:s')]);
                 $successEntries[] = $mailer->id;
+
+                Subscriber::where('id', $mailer->subscriber_id)->update([
+                    'total_mails'   => DB::raw('total_mails + 1'),
+                    'total_success' =>  DB::raw( 'total_success + 1' )
+                ]);
             }
             else
             {
@@ -64,6 +71,11 @@ class MailSender
                     'subject'       => $mailer->template->subject,
                     'body'          => access()->addMailerSignature($mailer, $mailer->template->body),
                     'fail_at'       => date('Y-m-d H:i:s')
+                ]);
+
+                Subscriber::where('id', $mailer->subscriber_id)->update([
+                    'total_mails'   => DB::raw('total_mails + 1'),
+                    'total_fail'    => DB::raw('total_fail + 1')
                 ]);
 
                 Emailer::where('id', $mailer->id)->update([
@@ -117,14 +129,14 @@ class MailSender
 
             try {
                 //Server settings
-                $mail->SMTPDebug = 0; // Enable verbose debug output
-                $mail->isSMTP();      // Set mailer to use SMTP
-                $mail->Host = $serverInfo->host;   // Specify main and backup SMTP servers
-                $mail->SMTPAuth = true;          // Enable SMTP authentication
-                $mail->Username = $serverInfo->username;   // SMTP username
-                $mail->Password = $serverInfo->password;    // SMTP password
-                $mail->SMTPSecure = 'tls'; // Enable TLS encryption, `ssl` also accepted
-                $mail->Port = 587;         // TCP port to connect to
+                $mail->SMTPDebug    = 0;
+                $mail->isSMTP();
+                $mail->Host         = $serverInfo->host;
+                $mail->SMTPAuth     = true;
+                $mail->Username     = $serverInfo->username;
+                $mail->Password     = $serverInfo->password;
+                $mail->SMTPSecure   = 'tls';
+                $mail->Port         = 587;
 
                 //Recipients
                 $mail->setFrom($serverInfo->set_from, $serverInfo->set_from_name);
